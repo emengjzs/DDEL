@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class CollectionGetOperator extends Operator {
     private CallSite callSite;
+    private MethodHandle methodHandle;
 
     public CollectionGetOperator() {
         super("CollectionGet");
@@ -23,17 +24,18 @@ public class CollectionGetOperator extends Operator {
     public Object evaluate(ExpNodeEvaluator evaluator, List<ExpNode> nodes) {
         Object collection = evaluator.evaluate(nodes.get(0));
         Object key = evaluator.evaluate(nodes.get(1));
-        if (callSite != null) {
-            try {
-                return callSite.dynamicInvoker().invoke(collection, key);
-            } catch (Throwable throwable) {
-                throwable.printStackTrace();
-            }
+        if (callSite == null) {
+            callSite = MyLinker.createCallSite(this, MethodType.methodType(Object.class, collection.getClass(), key.getClass()));
+            methodHandle = callSite.dynamicInvoker();
+        }
+        try {
+            return methodHandle.invoke(collection, key);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
         }
         if (collection == null || key == null) {
             return null;
         }
-        callSite = MyLinker.createCallSite(this, MethodType.methodType(Object.class, collection.getClass(), key.getClass()));
         if (collection instanceof Map) {
             return ((Map) collection).get(key);
         }
@@ -64,9 +66,9 @@ public class CollectionGetOperator extends Operator {
     }
 
     public static final Lookup lookup = new Lookup(MethodHandles.lookup());
-    private static final MethodHandle HANDLE_MAP_GET = lookup.findOwnStatic("mapGet", Object.class, Map.class, Object.class);
-    private static final MethodHandle HANDLE_IS_MAP = Guards.isInstance(Map.class, 1, HANDLE_MAP_GET.type());
+    public static final MethodHandle HANDLE_MAP_GET = lookup.findOwnStatic("mapGet", Object.class, Map.class, Object.class);
+    public static final MethodHandle HANDLE_IS_MAP = Guards.isInstance(Map.class, 0, MethodType.methodType(Object.class, Object.class, Object.class));
 
     private static final MethodHandle HANDLE_LIST_GET = lookup.findOwnStatic("listGet", Object.class, List.class, Number.class);
-    private static final MethodHandle HANDLE_IS_LIST = Guards.isInstance(List.class, 1, HANDLE_MAP_GET.type());
+    private static final MethodHandle HANDLE_IS_LIST = Guards.isInstance(List.class, 0, MethodType.methodType(Object.class, Object.class, Object.class));
 }
