@@ -8,6 +8,7 @@
 *.ear
 *.nar
 hs_err_pid*
+
 ##############################
 ## Maven
 ##############################
@@ -22,6 +23,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
+
 ##############################
 ## Gradle
 ##############################
@@ -31,6 +33,7 @@ build/
 .gradletasknamecache
 gradle-app.setting
 !gradle-wrapper.jar
+
 ##############################
 ## IntelliJ
 ##############################
@@ -40,6 +43,7 @@ out/
 *.iml
 *.ipr
 *.iws
+
 ##############################
 ## Eclipse
 ##############################
@@ -56,6 +60,7 @@ tmp/
 local.properties
 .loadpath
 .factorypath
+
 ##############################
 ## NetBeans
 ##############################
@@ -66,10 +71,12 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+
 ##############################
 ## Visual Studio Code
 ##############################
 .vscode/
+
 ##############################
 ## OS X
 ##############################
