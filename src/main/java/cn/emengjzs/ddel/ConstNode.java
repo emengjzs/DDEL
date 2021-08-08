@@ -9,7 +9,7 @@ public class ConstNode extends ExpNode {
 
     @Override
     public int getChildSize() {
-        return 0;
+        return 1;
     }
 
     @Override

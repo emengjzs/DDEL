@@ -3,20 +3,19 @@ package cn.emengjzs.ddel;
 import jdk.dynalink.linker.GuardedInvocation;
 import jdk.dynalink.linker.LinkRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ListOperator extends Operator {
+public class IfThenElseOperator extends Operator {
 
-    protected ListOperator() {
-        super("List");
+    protected IfThenElseOperator() {
+        super("IfThenElse");
     }
 
     @Override
     public Object evaluate(ExpNodeEvaluator evaluator, List<ExpNode> nodes) {
-        List<Object> list = new ArrayList<>(nodes.size());
-        nodes.forEach(node -> list.add(evaluator.evaluate(node)));
-        return list;
+        return (Boolean) evaluator.evaluate(nodes.get(0)) ?
+                evaluator.evaluate(nodes.get(1)) :
+                evaluator.evaluate(nodes.get(2));
     }
 
     @Override
